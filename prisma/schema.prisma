@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  name               String
+  email              String    @unique
+  password           String
+  role               role      @default(User)
+  phone              String
+  isActive           Boolean   @default(false)
+  activationToken    String?   @db.LongText
+  passwordResetToken String?   @db.LongText
+  passwordChangeAt   DateTime?
+  createdAt          DateTime  @default(now())
+
+  @@map("users")
+}
+
+model Project {
+  id            String         @id @default(uuid())
+  title         String
+  type          String
+  desc          String         @db.LongText
+  tnt           String
+  shortDesc     String?
+  liveLink      String?
+  clientGithub  String?
+  serverGithub  String?
+  createdAt     DateTime       @default(now())
+  projectPhotos ProjectPhoto[]
+
+  @@map("projects")
+}
+
+model ProjectPhoto {
+  id        String  @id @default(uuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  public_id  String
+  secure_url String
+
+  createdAt DateTime @default(now())
+
+  @@map("projectphotos")
+}
+
+enum role {
+  User
+  Admin
+  Super_Admin
+}
