@@ -60,7 +60,7 @@ export const signUpService = async (data: User): Promise<User | null> => {
   const emailData = {
     to: data.email,
     subject: `Account Activation`,
-    link: `${config.client_url}/${data.activationToken}`,
+    link: `${config.client_url}/activation/${data.activationToken}`,
     button_text: `Activation`,
     expTime: `1 hours`,
   }
@@ -223,6 +223,7 @@ export const changePasswordService = async (
 
   const updatedData = {
     password: newHashedPassword,
+    // passwordChangeAt: Date(),
   }
 
   await prisma.user.update({
@@ -252,7 +253,7 @@ export const forgetPasswordService = async (email: string) => {
   const emailData = {
     to: email,
     subject: `Reset Password`,
-    link: `${config.client_url}/${isUserExist.passwordResetToken}`,
+    link: `${config.client_url}/reset-password/${isUserExist.passwordResetToken}`,
     button_text: `Reset Password`,
     expTime: `1 hours`,
   }

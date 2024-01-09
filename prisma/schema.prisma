@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -27,34 +27,34 @@ model User {
   @@map("users")
 }
 
-model Project {
-  id            String         @id @default(uuid())
-  title         String
-  type          String
-  desc          String         @db.LongText
-  tnt           String
-  shortDesc     String?
-  liveLink      String?
-  clientGithub  String?
-  serverGithub  String?
-  createdAt     DateTime       @default(now())
-  projectPhotos ProjectPhoto[]
+// model Project {
+//   id            String         @id @default(uuid())
+//   title         String
+//   type          String
+//   desc          String         @db.LongText
+//   tnt           String
+//   shortDesc     String?
+//   liveLink      String?
+//   clientGithub  String?
+//   serverGithub  String?
+//   createdAt     DateTime       @default(now())
+//   projectPhotos ProjectPhoto[]
 
-  @@map("projects")
-}
+//   @@map("projects")
+// }
 
-model ProjectPhoto {
-  id        String  @id @default(uuid())
-  projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+// model ProjectPhoto {
+//   id        String  @id @default(uuid())
+//   projectId String
+//   project   Project @relation(fields: [projectId], references: [id])
 
-  public_id  String
-  secure_url String
+//   public_id  String
+//   secure_url String
 
-  createdAt DateTime @default(now())
+//   createdAt DateTime @default(now())
 
-  @@map("projectphotos")
-}
+//   @@map("projectphotos")
+// }
 
 enum role {
   User
