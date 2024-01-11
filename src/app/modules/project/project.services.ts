@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Project, Prisma } from '@prisma/client'
 import prisma from '../../../utilities/prisma'
@@ -34,7 +35,15 @@ export const getProjectsService = async (
   options: IPaginationOptions
 ): Promise<IGenericResponse<Project[]>> => {
   const { limit, page, skip } = calculatePagination(options)
-  const { searchTerm, ...filterData } = filters
+  const { searchTerm, onGoing, ...filterData } = filters
+
+  if (onGoing === 'true') {
+    // @ts-ignore
+    filterData.onGoing = true
+  } else if (onGoing === 'false') {
+    // @ts-ignore
+    filterData.onGoing = false
+  }
 
   const andConditions = []
 
@@ -114,6 +123,7 @@ export const getProjectService = async (
       id,
     },
     include: projectPopulate,
+    // include: { manager: true ,Section: true },
   })
 
   if (!result) {

@@ -1,7 +1,8 @@
-export const projectFilterableFields: string[] = ['searchTerm', 'name']
+export const projectFilterableFields: string[] = ['searchTerm', 'onGoing']
 
-export const projectSearchableFields: string[] = ['name']
+export const projectSearchableFields: string[] = ['title']
 
 export const projectPopulate = {
   manager: true,
+  sections: true,
 }

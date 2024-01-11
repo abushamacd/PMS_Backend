@@ -40,7 +40,7 @@ model Project {
 
   managerId String
   manager   User      @relation(fields: [managerId], references: [id])
-  Section   Section[]
+  sections  Section[]
 
   @@map("projects")
 }
