@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "mysql"
-  url               = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
   // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
@@ -23,38 +23,52 @@ model User {
   passwordResetToken String?   @db.LongText
   passwordChangeAt   DateTime?
   createdAt          DateTime  @default(now())
+  Project            Project[]
 
   @@map("users")
 }
 
-// model Project {
-//   id            String         @id @default(uuid())
-//   title         String
-//   type          String
-//   desc          String         @db.LongText
-//   tnt           String
-//   shortDesc     String?
-//   liveLink      String?
-//   clientGithub  String?
-//   serverGithub  String?
-//   createdAt     DateTime       @default(now())
-//   projectPhotos ProjectPhoto[]
+model Project {
+  id              String   @id @default(uuid())
+  title           String
+  icon            String
+  desc            String   @db.LongText
+  position        Int
+  onGoing         Boolean  @default(true)
+  onGoingPosition Int      @default(0)
+  createdAt       DateTime @default(now())
 
-//   @@map("projects")
-// }
+  managerId String
+  manager   User      @relation(fields: [managerId], references: [id])
+  Section   Section[]
 
-// model ProjectPhoto {
-//   id        String  @id @default(uuid())
-//   projectId String
-//   project   Project @relation(fields: [projectId], references: [id])
+  @@map("projects")
+}
 
-//   public_id  String
-//   secure_url String
+model Section {
+  id        String   @id @default(uuid())
+  title     String   @default("Untitled")
+  createdAt DateTime @default(now())
 
-//   createdAt DateTime @default(now())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+  Task      Task[]
 
-//   @@map("projectphotos")
-// }
+  @@map("sections")
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  title     String   @default("Untitled")
+  desc      String   @db.LongText
+  position  Int
+  createdAt DateTime @default(now())
+
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id])
+
+  @@map("tasks")
+}
 
 enum role {
   User

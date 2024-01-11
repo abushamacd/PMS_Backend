@@ -8,7 +8,10 @@ const router = express.Router()
 // example route
 router
   .route('/profile')
-  .get(auth(ENUM_USER_ROLE.ADMIN), getUserProfile)
+  .get(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    getUserProfile
+  )
   .patch(auth(ENUM_USER_ROLE.ADMIN), updateUserProfile)
 
 router.route('/:email').get(getUser)
