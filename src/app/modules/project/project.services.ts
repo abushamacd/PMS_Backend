@@ -128,6 +128,14 @@ export const getProjectService = async (
         orderBy: {
           createdAt: 'asc',
         },
+        include: {
+          // @ts-ignore
+          tasks: {
+            orderBy: {
+              position: 'asc',
+            },
+          },
+        },
       },
     },
   })

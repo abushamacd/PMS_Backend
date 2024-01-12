@@ -4,6 +4,7 @@ import authRoute from '../modules/auth/auth.routes'
 import userRoute from '../modules/user/user.routes'
 import projectRoute from '../modules/project/project.routes'
 import sectionRoute from '../modules/section/section.routes'
+import taskRoute from '../modules/task/task.routes'
 
 const appRoutes = [
   {
@@ -21,6 +22,10 @@ const appRoutes = [
   {
     path: '/section',
     route: sectionRoute,
+  },
+  {
+    path: '/task',
+    route: taskRoute,
   },
 ]
 
