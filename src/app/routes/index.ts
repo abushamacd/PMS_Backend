@@ -3,6 +3,7 @@ const router = express.Router()
 import authRoute from '../modules/auth/auth.routes'
 import userRoute from '../modules/user/user.routes'
 import projectRoute from '../modules/project/project.routes'
+import sectionRoute from '../modules/section/section.routes'
 
 const appRoutes = [
   {
@@ -16,6 +17,10 @@ const appRoutes = [
   {
     path: '/project',
     route: projectRoute,
+  },
+  {
+    path: '/section',
+    route: sectionRoute,
   },
 ]
 

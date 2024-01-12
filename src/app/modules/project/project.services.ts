@@ -122,8 +122,14 @@ export const getProjectService = async (
     where: {
       id,
     },
-    include: projectPopulate,
-    // include: { manager: true ,Section: true },
+    include: {
+      manager: true,
+      sections: {
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+    },
   })
 
   if (!result) {
