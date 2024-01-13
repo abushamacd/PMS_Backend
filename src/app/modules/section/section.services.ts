@@ -8,8 +8,7 @@ import { ISectionFilterRequest } from './section.interfaces'
 import { IPaginationOptions } from '../../../interface/pagination'
 import { IGenericResponse } from '../../../interface/common'
 import { calculatePagination } from '../../../helpers/paginationHelper'
-import { sectionPopulate, sectionSearchableFields } from './section.constants'
-import { JwtPayload } from 'jsonwebtoken'
+import { sectionSearchableFields } from './section.constants'
 import { asyncForEach } from '../../../utilities/asyncForEach'
 
 // create section service
@@ -86,7 +85,7 @@ export const getSectionsService = async (
 export const updateSectionsPositionService = async (
   payload: Section[]
 ): Promise<Section[] | null> => {
-  await asyncForEach(payload, async (section: Section, index: number) => {
+  await asyncForEach(payload, async (section: Section) => {
     await prisma.section.update({
       where: {
         id: section.id,
@@ -158,11 +157,19 @@ export const deleteSectionService = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Section not found')
   }
 
-  const result = await prisma.section.delete({
-    where: {
-      id,
-    },
+  await prisma.$transaction(async transactionClient => {
+    await transactionClient.task.deleteMany({
+      where: {
+        sectionId: id,
+      },
+    })
+
+    await transactionClient.section.deleteMany({
+      where: {
+        id: id,
+      },
+    })
   })
 
-  return result
+  return null
 }

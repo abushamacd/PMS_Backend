@@ -8,7 +8,7 @@ import { IProjectFilterRequest } from './project.interfaces'
 import { IPaginationOptions } from '../../../interface/pagination'
 import { IGenericResponse } from '../../../interface/common'
 import { calculatePagination } from '../../../helpers/paginationHelper'
-import { projectPopulate, projectSearchableFields } from './project.constants'
+import { projectSearchableFields } from './project.constants'
 import { JwtPayload } from 'jsonwebtoken'
 import { asyncForEach } from '../../../utilities/asyncForEach'
 
@@ -109,7 +109,6 @@ export const updateProjectsPositionService = async (
         position: index,
       },
     })
-    // console.log(index, project)
   })
   return null
 }
@@ -180,17 +179,49 @@ export const deleteProjectService = async (
     where: {
       id,
     },
+    include: {
+      manager: true,
+      sections: {
+        orderBy: {
+          createdAt: 'asc',
+        },
+        include: {
+          // @ts-ignore
+          tasks: {
+            orderBy: {
+              position: 'asc',
+            },
+          },
+        },
+      },
+    },
   })
 
   if (!isExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Project not found')
   }
 
-  const result = await prisma.project.delete({
-    where: {
-      id,
-    },
+  await prisma.$transaction(async transactionClient => {
+    await asyncForEach(isExist?.sections, async (section: Project) => {
+      await transactionClient.task.deleteMany({
+        where: {
+          sectionId: section?.id,
+        },
+      })
+    })
+
+    await transactionClient.section.deleteMany({
+      where: {
+        projectId: id,
+      },
+    })
+
+    await transactionClient.project.delete({
+      where: {
+        id: id,
+      },
+    })
   })
 
-  return result
+  return null
 }

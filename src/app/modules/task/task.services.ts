@@ -8,8 +8,7 @@ import { ITaskFilterRequest } from './task.interfaces'
 import { IPaginationOptions } from '../../../interface/pagination'
 import { IGenericResponse } from '../../../interface/common'
 import { calculatePagination } from '../../../helpers/paginationHelper'
-import { taskPopulate, taskSearchableFields } from './task.constants'
-import { JwtPayload } from 'jsonwebtoken'
+import { taskSearchableFields } from './task.constants'
 import { asyncForEach } from '../../../utilities/asyncForEach'
 
 // create task service
