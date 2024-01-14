@@ -24,13 +24,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-const uploadBlogImage = async (
+const uploadPhoto = async (
   file: IUploadFile
 ): Promise<ICloudinaryResponse | undefined> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file.path,
-      { folder: 'MyPort/blog' },
+      { folder: 'pms/user' },
       // @ts-ignore
       (error: Error, result: ICloudinaryResponse) => {
         fs.unlinkSync(file.path)
@@ -63,50 +63,9 @@ const deleteBlogImage = async (
     )
   })
 }
-const uploadProjectImage = async (
-  file: IUploadFile
-): Promise<ICloudinaryResponse | undefined> => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(
-      file.path,
-      { folder: 'MyPort/project' },
-      // @ts-ignore
-      (error: Error, result: ICloudinaryResponse) => {
-        fs.unlinkSync(file.path)
-        if (error) {
-          reject(error)
-        } else {
-          resolve({
-            secure_url: result.secure_url,
-            public_id: result.public_id,
-          })
-        }
-      }
-    )
-  })
-}
-
-const deleteProjectImage = async (
-  id: string
-): Promise<ICloudinaryResponse | undefined> => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.destroy(
-      `MyPort/project/${id}`,
-      (error: Error, result: ICloudinaryResponse) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(result)
-        }
-      }
-    )
-  })
-}
 
 export const FileUploadHelper = {
-  uploadBlogImage,
+  uploadPhoto,
   deleteBlogImage,
-  uploadProjectImage,
-  deleteProjectImage,
   upload,
 }

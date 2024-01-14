@@ -1,7 +1,13 @@
 import express from 'express'
 import { auth } from '../../../middleware/auth'
 import { ENUM_USER_ROLE } from '../../../enums/user'
-import { getUser, getUserProfile, updateUserProfile } from './user.controllers'
+import {
+  getUser,
+  getUserProfile,
+  updateUserProfile,
+  uploadPhoto,
+} from './user.controllers'
+import { FileUploadHelper } from '../../../helpers/FileUploadHelper'
 
 const router = express.Router()
 
@@ -12,7 +18,18 @@ router
     auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
     getUserProfile
   )
-  .patch(auth(ENUM_USER_ROLE.ADMIN), updateUserProfile)
+  .patch(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    updateUserProfile
+  )
+
+router
+  .route('/photo')
+  .post(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    FileUploadHelper.upload.single('images'),
+    uploadPhoto
+  )
 
 router.route('/:email').get(getUser)
 

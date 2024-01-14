@@ -6,6 +6,7 @@ import {
   getUserProfileService,
   getUserService,
   updateUserProfileService,
+  uploadPhotoService,
 } from './user.services'
 
 // get user profile controller
@@ -37,6 +38,17 @@ export const getUser = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User get successfully',
+    data: result,
+  })
+})
+
+// upload photo
+export const uploadPhoto = tryCatch(async (req, res) => {
+  const result = await uploadPhotoService(req)
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog image upload successfully',
     data: result,
   })
 })

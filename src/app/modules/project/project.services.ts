@@ -20,7 +20,7 @@ export const createProjectService = async (
   const total = await prisma.project.count({})
   data.position = total > 0 ? total : 0
   data.managerId = user?.id
-  data.icon = '👌' as string
+  data.icon = '👍' as string
 
   const result = await prisma.project.create({
     data,

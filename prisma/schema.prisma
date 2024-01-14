@@ -18,6 +18,9 @@ model User {
   password           String
   role               role      @default(User)
   phone              String
+  address            String?
+  public_id          String?
+  url                String?
   isActive           Boolean   @default(false)
   activationToken    String?   @db.LongText
   passwordResetToken String?   @db.LongText
