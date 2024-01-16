@@ -1,5 +1,4 @@
-// Example interfaces
-export type IUser = {
-  oldPassword: string
-  newPassword: string
+export type IUserFilterRequest = {
+  searchTerm?: string | undefined
+  role?: string | undefined
 }

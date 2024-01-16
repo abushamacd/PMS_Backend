@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '../../../utilities/prisma'
-import { User } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 import cloudinary from 'cloudinary'
 import { IUploadFile } from '../../../interface/file'
 import { Request } from 'express'
 import { FileUploadHelper } from '../../../helpers/FileUploadHelper'
+import { IPaginationOptions } from '../../../interface/pagination'
+import { IGenericResponse } from '../../../interface/common'
+import { calculatePagination } from '../../../helpers/paginationHelper'
+import { userSearchableFields } from './user.constants'
+import { IUserFilterRequest } from './user.interfaces'
 
 // get user profile service
 export const getUserProfileService = async (payload: string) => {
@@ -90,4 +96,63 @@ export const uploadPhotoService = async (req: Request) => {
   }
 
   return user
+}
+
+// get Users service
+export const getUsersService = async (
+  filters: IUserFilterRequest,
+  options: IPaginationOptions
+): Promise<IGenericResponse<User[]>> => {
+  const { limit, page, skip } = calculatePagination(options)
+  const { searchTerm, ...filterData } = filters
+
+  const andConditions = []
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: userSearchableFields.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          // mode: 'insensitive',
+        },
+      })),
+    })
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    })
+  }
+
+  const whereConditions: Prisma.UserWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {}
+
+  const result = await prisma.user.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+            createdAt: 'asc',
+          },
+  })
+  const total = await prisma.user.count({
+    where: whereConditions,
+  })
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  }
 }

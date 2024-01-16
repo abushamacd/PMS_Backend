@@ -5,9 +5,13 @@ import { User } from '@prisma/client'
 import {
   getUserProfileService,
   getUserService,
+  getUsersService,
   updateUserProfileService,
   uploadPhotoService,
 } from './user.services'
+import { pick } from '../../../utilities/pick'
+import { userFilterableFields } from './user.constants'
+import { paginationFields } from '../../../constants/pagination'
 
 // get user profile controller
 export const getUserProfile = tryCatch(async (req, res) => {
@@ -50,5 +54,19 @@ export const uploadPhoto = tryCatch(async (req, res) => {
     success: true,
     message: 'Blog image upload successfully',
     data: result,
+  })
+})
+
+// get Users
+export const getUsers = tryCatch(async (req, res) => {
+  const filters = pick(req.query, userFilterableFields)
+  const options = pick(req.query, paginationFields)
+  const result = await getUsersService(filters, options)
+  sendRes<User[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Users retrived successfully',
+    meta: result.meta,
+    data: result.data,
   })
 })

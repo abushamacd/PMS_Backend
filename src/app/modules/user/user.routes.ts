@@ -4,6 +4,7 @@ import { ENUM_USER_ROLE } from '../../../enums/user'
 import {
   getUser,
   getUserProfile,
+  getUsers,
   updateUserProfile,
   uploadPhoto,
 } from './user.controllers'
@@ -12,6 +13,8 @@ import { FileUploadHelper } from '../../../helpers/FileUploadHelper'
 const router = express.Router()
 
 // example route
+router.route('/').get(getUsers)
+
 router
   .route('/profile')
   .get(
