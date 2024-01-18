@@ -94,7 +94,6 @@ export const updateSectionsPositionService = async (
         title: 'index',
       },
     })
-    // console.log(index, section)
   })
   return null
 }

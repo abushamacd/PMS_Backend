@@ -26,7 +26,8 @@ model User {
   passwordResetToken String?   @db.LongText
   passwordChangeAt   DateTime?
   createdAt          DateTime  @default(now())
-  Project            Project[]
+  projects           Project[]
+  tasks              Task[]
 
   @@map("users")
 }
@@ -69,6 +70,9 @@ model Task {
 
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id])
+
+  assignId String
+  assign   User   @relation(fields: [assignId], references: [id])
 
   @@map("tasks")
 }

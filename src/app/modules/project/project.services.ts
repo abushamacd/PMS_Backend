@@ -81,6 +81,9 @@ export const getProjectsService = async (
         : {
             position: 'asc',
           },
+    include: {
+      manager: true,
+    },
   })
   const total = await prisma.project.count({
     where: whereConditions,

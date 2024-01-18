@@ -3,10 +3,12 @@ import { sendRes } from '../../../utilities/sendRes'
 import httpStatus from 'http-status'
 import { User } from '@prisma/client'
 import {
+  deleteUserService,
   getUserProfileService,
   getUserService,
   getUsersService,
   updateUserProfileService,
+  updateUserRoleService,
   uploadPhotoService,
 } from './user.services'
 import { pick } from '../../../utilities/pick'
@@ -31,6 +33,17 @@ export const updateUserProfile = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User update successfully',
+    data: result,
+  })
+})
+
+// update user role controller
+export const updateUserRole = tryCatch(async (req, res) => {
+  const result = await updateUserRoleService(req.body)
+  sendRes<User>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User role update successfully',
     data: result,
   })
 })
@@ -68,5 +81,17 @@ export const getUsers = tryCatch(async (req, res) => {
     message: 'Users retrived successfully',
     meta: result.meta,
     data: result.data,
+  })
+})
+
+// delete user
+export const deleteUser = tryCatch(async (req, res) => {
+  const { id } = req.params
+  const result = await deleteUserService(id)
+  sendRes<User | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User deleted successfully',
+    data: result,
   })
 })

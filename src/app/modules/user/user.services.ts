@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '../../../utilities/prisma'
 import { Prisma, User } from '@prisma/client'
@@ -10,12 +12,17 @@ import { IGenericResponse } from '../../../interface/common'
 import { calculatePagination } from '../../../helpers/paginationHelper'
 import { userSearchableFields } from './user.constants'
 import { IUserFilterRequest } from './user.interfaces'
+import { ApiError } from '../../../errorFormating/apiError'
+import httpStatus from 'http-status'
 
 // get user profile service
 export const getUserProfileService = async (payload: string) => {
   const result = await prisma.user.findUnique({
     where: {
       email: payload,
+    },
+    include: {
+      tasks: true,
     },
   })
 
@@ -24,11 +31,38 @@ export const getUserProfileService = async (payload: string) => {
 
 // update user service
 export const updateUserProfileService = async (id: string, payload: User) => {
+  const { role, password, ...userData } = payload
   const result = await prisma.user.update({
     where: {
       id,
     },
-    data: payload,
+    data: userData,
+  })
+
+  return result
+}
+
+// update user role service
+export const updateUserRoleService = async (payload: User) => {
+  const user: any = await prisma.user.findUnique({
+    where: {
+      id: payload.id,
+    },
+  })
+
+  const data: any = {}
+
+  if (user.role === 'User') {
+    data.role = 'Admin'
+  } else if (user.role === 'Admin') {
+    data.role = 'User'
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id: payload?.id,
+    },
+    data,
   })
 
   return result
@@ -155,4 +189,34 @@ export const getUsersService = async (
     },
     data: result,
   }
+}
+
+// delete user service
+export const deleteUserService = async (id: string): Promise<User | null> => {
+  const isExist = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      tasks: true,
+    },
+  })
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found')
+  }
+
+  if (isExist?.tasks.length > 0) {
+    throw new Error(
+      `User is assign to task ${isExist?.tasks[0]?.title}. First remove the user from task ${isExist?.tasks[0]?.title}`
+    )
+  }
+
+  const result = await prisma.user.delete({
+    where: {
+      id,
+    },
+  })
+
+  return result
 }
