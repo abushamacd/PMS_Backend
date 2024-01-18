@@ -22,11 +22,9 @@ import { ENUM_USER_ROLE } from '../../../enums/user'
 
 const router = express.Router()
 
-router.route('/signup').post(
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN),
-  reqValidate(signUpZod),
-  signUp
-)
+router
+  .route('/signup')
+  .post(auth(ENUM_USER_ROLE.SUPER_ADMIN), reqValidate(signUpZod), signUp)
 
 router.route('/activation/:token').patch(accountActivation)
 
