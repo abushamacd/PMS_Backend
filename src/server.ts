@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { errorLogger, logger } from './utilities/logger'
 import { bootStrap } from './utilities/bootStrap'
