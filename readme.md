@@ -7,7 +7,7 @@
 
 ## Description:
 
-This is a project management system backend which I build in typescript language using NodeJS and ExpressJs. Here I follow modular pattern because modular pattern easy to debug and use MySQL for database, JWT for secutiry purpose, cloudinary for media management, zod for data validation and winston for log and many more.
+This is a project management system backend which I build in typescript language using NodeJS and ExpressJs in modular pattern. Here I follow modular pattern because modular pattern easy to debug and use MySQL for database, JWT for secutiry purpose, cloudinary for media management, zod for data validation and winston for log and many more.
 
 ## Main Features:
 
@@ -18,6 +18,12 @@ This is a project management system backend which I build in typescript language
 - Admin can create, update and delete project and task.
 - Project and task are drag and dropable.
 - User can see user's task.
+
+#### Requirement Analysis Docs - [🔗](https://docs.google.com/document/d/1CN9Eh5ActB6plCqxmQ-PY1G1P1OYV_5S_Q59hpcxPiA/edit?usp=sharing)
+
+#### Entity Relationship Diagram (ERD)
+
+<img src="https://i.ibb.co/brLRZg5/Untitled.png" alt="homepage">
 
 ---
 
