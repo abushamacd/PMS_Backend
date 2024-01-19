@@ -47,6 +47,7 @@ const signUpService = (data) => __awaiter(void 0, void 0, void 0, function* () {
     // send activation link
     const emailData = {
         to: data.email,
+        receiver: data.name,
         subject: `Account Activation`,
         link: `${config_1.default.client_url}/activation/${data.activationToken}`,
         button_text: `Activation`,
